@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "90557c0d03ef4ab12948a85db79cce36a6876f6009727fc80e137ea3920ffb3b"
+            "sha256": "50558ab2d1f8ba0e8c0478e62f555fe1c08d69724e9c58cc0991deae39eeafe7"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -82,6 +82,14 @@
                 "sha256:471aee25f3992bd325afa3772f1063dbdbbca947a041b8b89466dc00d606f8b6"
             ],
             "version": "==1.4"
+        },
+        "branca": {
+            "hashes": [
+                "sha256:62c2e777f074fc1830cd40ba9e650beb941861075980babafead8d97856b1a4b",
+                "sha256:c111453617b17ab2bda60a4cd71787d6f2b59c85cdf71ab160a737606ac66c31"
+            ],
+            "markers": "python_version >= '3.5'",
+            "version": "==0.4.2"
         },
         "cachetools": {
             "hashes": [
@@ -168,6 +176,13 @@
             ],
             "markers": "python_version >= '2.7'",
             "version": "==0.3"
+        },
+        "folium": {
+            "hashes": [
+                "sha256:3d2c48dd6ffe5327975bbfd718468c4e81db9f2844c26e574f878adf4c08b644"
+            ],
+            "index": "pypi",
+            "version": "==0.12.1"
         },
         "gitdb": {
             "hashes": [
@@ -822,6 +837,14 @@
             ],
             "index": "pypi",
             "version": "==1.2.0"
+        },
+        "streamlit-folium": {
+            "hashes": [
+                "sha256:20a3cc5a5f63ce03d9ccd0948fd129b952940f9418da348ce9ae8f3a62c1eeb2",
+                "sha256:59e191d49b6c481a6a198bf86e8d8836026ee9af44bd9d394d9a99b4e64937ac"
+            ],
+            "index": "pypi",
+            "version": "==0.4.0"
         },
         "toml": {
             "hashes": [

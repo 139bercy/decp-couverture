@@ -9,6 +9,8 @@ decp-couverture = {editable = true, path = "./decp_couverture"}
 streamlit = "*"
 munch = "*"
 pyyaml = "*"
+streamlit-folium = "*"
+folium = "*"
 
 [dev-packages]
 black = "*"
