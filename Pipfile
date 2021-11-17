@@ -8,6 +8,7 @@ requests = "*"
 decp-couverture = {editable = true, path = "./decp_couverture"}
 streamlit = "*"
 munch = "*"
+pyyaml = "*"
 
 [dev-packages]
 black = "*"

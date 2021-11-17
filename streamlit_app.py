@@ -4,4 +4,4 @@ l'application Web depuis la racine du projet avec le CLI Streamlit (streamlit ru
 
 from decp_couverture import web
 
-web.app.run()
+web.run()
