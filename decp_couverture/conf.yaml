@@ -1,0 +1,8 @@
+download:
+  base_url_decp: https://data.economie.gouv.fr/explore/dataset/decp_augmente/download/
+  chemin_decp: data/decp_augmente.csv
+
+web:
+  titre_page : Qualité des Données Essentielles de la Commande Publique (DECP)
+  texte_haut_barre_laterale: Cette application propose une analyse de la couverture des DECP présentes dans le fichier augmenté publié quotidiennement sur [data.economie.gouv.fr](https://data.economie.gouv.fr/explore/dataset/decp_augmente/).
+  texte_bas_barre_laterale: Le code source de cette application est disponible [sur GitHub](https://github.com/139bercy/decp-qualite/). Pour plus d'informations sur les DECP, consultez la [documentation dédiée](https://139bercy.github.io/decp-docs/).
