@@ -1,8 +1,20 @@
 download:
   base_url_decp: https://data.economie.gouv.fr/explore/dataset/decp_augmente/download/
+  url_communes_topojson: https://raw.githubusercontent.com/AtelierCartographie/Khartis/master/public/data/map/FR-com-2017/france.json
+  url_departements_topojson: https://france-geojson.gregoiredavid.fr/repo/departements.geojson
+  url_regions_topojson: https://france-geojson.gregoiredavid.fr/repo/regions.geojson
+
   chemin_decp: data/decp_augmente.csv
+  chemin_communes_topojson: data/communes.topo.json
+  chemin_departements_topojson: data/departements.topo.json
+  chemin_regions_topojson: data/regions.topo.json
 
 web:
-  titre_page : Qualité des Données Essentielles de la Commande Publique (DECP)
+  titre_page : Couverture des Données Essentielles de la Commande Publique (DECP)
   texte_haut_barre_laterale: Cette application propose une analyse de la couverture des DECP présentes dans le fichier augmenté publié quotidiennement sur [data.economie.gouv.fr](https://data.economie.gouv.fr/explore/dataset/decp_augmente/).
-  texte_bas_barre_laterale: Le code source de cette application est disponible [sur GitHub](https://github.com/139bercy/decp-qualite/). Pour plus d'informations sur les DECP, consultez la [documentation dédiée](https://139bercy.github.io/decp-docs/).
+  texte_bas_barre_laterale: Le code source de cette application est disponible [sur GitHub](https://github.com/139bercy/decp-couverture/). Pour plus d'informations sur les DECP, consultez la [documentation dédiée](https://139bercy.github.io/decp-docs/).
+  annees:
+    - 2021
+    - 2020
+    - 2019
+    

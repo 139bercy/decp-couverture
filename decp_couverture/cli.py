@@ -11,15 +11,15 @@ from decp_couverture import download
 
 
 def command_download(args=None):
-    """Télécharge la donnée consolidée (.csv depuis economie.gouv.fr)."""
+    """Télécharge les DECP augmentées et les contours"""
     download.download_decp(rows=args.rows)
+    download.download_contours()
 
 
 def command_web(args=None):
     """Lance l'application web de présentation de la couverture"""
-    # sys.argv = ["0", "run", "./streamlit_app.py"]
-    # streamlit.cli.main()
-    web.run()
+    sys.argv = ["0", "run", "./streamlit_app.py"]
+    streamlit.cli.main()
 
 
 def get_parser():
@@ -29,12 +29,13 @@ def get_parser():
     parser = argparse.ArgumentParser()
     subparser = parser.add_subparsers(dest="command")
     download_command = subparser.add_parser(
-        "download", help="télécharger les DECP (.csv depuis economie.gouv.fr)"
+        "download",
+        help="télécharger les DECP (.csv depuis economie.gouv.fr) et les contours de cartes",
     )
     download_command.add_argument(
         "--rows",
         required=False,
-        help="nombre de lignes à télécharger",
+        help="nombre de lignes de DECP à télécharger",
         type=int,
     )
     web_command = subparser.add_parser(
