@@ -3,7 +3,8 @@ download:
   url_communes_topojson: https://raw.githubusercontent.com/AtelierCartographie/Khartis/master/public/data/map/FR-com-2017/france.json
   url_departements_topojson: https://france-geojson.gregoiredavid.fr/repo/departements.geojson
   url_regions_topojson: https://france-geojson.gregoiredavid.fr/repo/regions.geojson
-
+  # Il existe un jeu de données contenant les trois niveaux, mais problèmes d'affichage :
+  #https://www.data.gouv.fr/fr/datasets/r/483b263b-98f7-4610-8b12-63e4630760de
   chemin_decp: data/decp_augmente.csv
   chemin_communes_topojson: data/communes.topo.json
   chemin_departements_topojson: data/departements.topo.json
@@ -17,4 +18,8 @@ web:
     - 2021
     - 2020
     - 2019
+  folium:
+    # Laisser vide les champs pour utiliser les valeurs par défauts de Folium
+    tiles: #"https://api.mapbox.com/styles/v1/istopopoki/ckg98kpoc010h19qusi9kxcct/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaXN0b3BvcG9raSIsImEiOiJjaW12eWw2ZHMwMGFxdzVtMWZ5NHcwOHJ4In0.VvZvyvK0UaxbFiAtak7aVw"
+    attribution: #'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors <a href="https://spdx.org/licenses/ODbL-1.0.html">ODbL</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'
     

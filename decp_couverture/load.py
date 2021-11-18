@@ -13,10 +13,16 @@ def load_data_from_csv_file(
     rows: int = None,
     columns: list = None,
     index_col: str = None,
-    dtype: dict = None
+    dtype: dict = None,
 ):
     return pandas.read_csv(
-        path, sep=sep, nrows=rows, header=0, index_col=index_col, usecols=columns, dtype=dtype
+        path,
+        sep=sep,
+        nrows=rows,
+        header=0,
+        index_col=index_col,
+        usecols=columns,
+        dtype=dtype,
     )
 
 
@@ -39,9 +45,14 @@ def load_decp(rows: int = None, columns: list = None):
     index_col = "id"
     if columns is not None and index_col not in columns:
         columns.append(index_col)
-    #TODO : enforce dtype for all columns
+    # TODO : enforce dtype for all columns
     return load_data_from_csv_file(
-        path, sep=sep, rows=rows, index_col=index_col, columns=columns, dtype={"codeRegionAcheteur":str}
+        path,
+        sep=sep,
+        rows=rows,
+        index_col=index_col,
+        columns=columns,
+        dtype={"codeRegionAcheteur": str},
     )
 
 
