@@ -10,6 +10,11 @@ from decp_couverture import load
 from decp_couverture import conf
 
 
+@st.cache(ttl=864000)  # 10 jours
+def cached__download_contours():
+    download.download_contours()
+
+
 def contours_layer_topojson(geo_data, topojson_key):
     """Construit une couche de contours pour Folium à partir d'un topojson
 
@@ -127,6 +132,8 @@ def run():
     )
     st.sidebar.markdown(conf.web.texte_bas_barre_laterale)
 
+    cached__download_contours()
+
     selected_year_decp_stats = coverage[coverage.annee_marche == selected_year]
 
     selected_year_decp_stats_cities = (
@@ -176,7 +183,7 @@ def run():
     added_layer = chloropleth_layer.add_to(folium_map)
     # folium_map.fit_bounds(added_layer.get_bounds())
     folium_static(folium_map)
-    
+
     # st.markdown("Zones les plus représentées")
     # hottest_zones = stats.sort_values(by="nombre_marches", ascending=False).head(5)
     # st.dataframe(hottest_zones)
@@ -190,6 +197,4 @@ def run():
             bytes = f.read()
             b64 = base64.b64encode(bytes).decode()
             href = f"<a href=\"data:file/html;base64,{b64}\" download='{file_name}'> {file_name} </a>"
-        col2.markdown(
-                f"{href}", unsafe_allow_html=True
-            )
+        col2.markdown(f"{href}", unsafe_allow_html=True)
