@@ -69,8 +69,7 @@ def get_last_artifact(artifact_name: str):
         artifact_url = artifact.get("archive_download_url")
         artifact_datetime = datetime.strptime(artifact_datetime, "%Y-%m-%dT%H:%M:%SZ")
         results[artifact_datetime] = artifact_url
-    results = dict(sorted(results.items()))
-    last_result = results[0]
+    last_result = sorted(results.items(), reverse=True)[0]
     logging.debug(f"Dernier artifact disponible : {last_result}")
     return last_result
 

@@ -15,11 +15,7 @@ from decp_couverture import conf
 def cached__download_contours():
     download.download_contours()
 
-@st.cache(ttl=86400)  # 1 jour
-def cached__get_artifacts():
-    return artifacts.get_artifacts()
-
-@st.cache(ttl=3600)  # 1 heure
+@st.cache(ttl=43200)  # 12 heures
 def cached__get_last_artifact(artifact_name: str):
     return artifacts.get_last_artifact(artifact_name)
 
@@ -142,6 +138,7 @@ def run():
     st.sidebar.markdown(conf.web.texte_bas_barre_laterale)
 
     cached__download_contours()
+    cached__get_last_artifact("coverage.csv")
 
     selected_year_decp_stats = coverage[coverage.annee_marche == selected_year]
 
