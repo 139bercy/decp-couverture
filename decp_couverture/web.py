@@ -200,6 +200,8 @@ def run():
     ) = cached__get_last_artifact("coverage.csv")
     coverage = cached__get_coverage(last_coverage_artifact_url)
 
+    st.sidebar.markdown(f"*Données mises à jour le {last_coverage_artifact_datetime.strftime('%d/%m/%Y')}.*")
+
     selected_year_decp_stats = coverage[coverage.annee_marche == selected_year]
 
     selected_year_decp_stats_cities = (
