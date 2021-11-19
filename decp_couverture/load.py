@@ -41,7 +41,7 @@ def open_json(path: str):
 
 def load_decp(rows: int = None, columns: list = None):
     path = conf.download.decp.chemin
-    sep = ";"  # equivalent to "%3B"
+    sep = conf.download.decp.separateur_csv
     index_col = "id"
     if columns is not None and index_col not in columns:
         columns.append(index_col)
