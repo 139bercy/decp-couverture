@@ -4,12 +4,10 @@ import zipfile
 import json
 import os
 
-import streamlit as st
 import requests
 
 from decp_couverture import conf
 
-@st.cache(ttl=86400)  # 1 jour
 def get_artifacts():
     """Obtient les artifacts depuis le projet GitHub.
 
@@ -47,7 +45,6 @@ def get_github_auth():
     token = os.environ["GITHUB_TOKEN"]
     return (username, token)
 
-@st.cache(ttl=3600)  # 1 heure
 def get_last_artifact(artifact_name: str):
     """Obtient le dernier artifact disponible.
 

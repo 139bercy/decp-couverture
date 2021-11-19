@@ -15,6 +15,14 @@ from decp_couverture import conf
 def cached__download_contours():
     download.download_contours()
 
+@st.cache(ttl=86400)  # 1 jour
+def cached__get_artifacts():
+    return artifacts.get_artifacts()
+
+@st.cache(ttl=3600)  # 1 heure
+def cached__get_last_artifact(artifact_name: str):
+    return artifacts.get_last_artifact(artifact_name)
+
 
 def contours_layer_topojson(geo_data, topojson_key):
     """Construit une couche de contours pour Folium à partir d'un topojson
