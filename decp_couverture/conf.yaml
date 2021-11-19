@@ -1,6 +1,8 @@
 download:
   decp:
     base_url: https://data.economie.gouv.fr/explore/dataset/decp_augmente/download/
+    # Les mêmes données peuvent être obtenues avec l'API mais le temps de réponse du serveur est très élevé :
+    # https://data.economie.gouv.fr/api/v2/catalog/datasets/decp_augmente/exports/csv?select=include(id)&select=include(idmarche)&select=include(anneenotification)&select=include(coderegionacheteur)&select=include(departementacheteur)&select=include(codecommuneacheteur)
     chemin: data/decp_augmente.csv
   contours:
     # Il existe un jeu de données contenant les trois niveaux de contours, mais problèmes d'affichage :
