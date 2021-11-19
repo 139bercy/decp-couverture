@@ -1,0 +1,44 @@
+download:
+  decp:
+    url: https://data.economie.gouv.fr/explore/dataset/decp_augmente/download/?format=csv&timezone=Europe/Paris&lang=fr&use_labels_for_header=true&csv_separator=%3B
+    # Les mêmes données peuvent être obtenues avec l'API mais le temps de réponse du serveur est très élevé :
+    # https://data.economie.gouv.fr/api/v2/catalog/datasets/decp_augmente/exports/csv?select=include(id)&select=include(idmarche)&select=include(anneenotification)&select=include(coderegionacheteur)&select=include(departementacheteur)&select=include(codecommuneacheteur)
+    chemin: data/decp_augmente.csv
+    separateur_csv: ;
+  contours:
+    # Il existe un jeu de données contenant les trois niveaux de contours, mais problèmes d'affichage :
+    # https://www.data.gouv.fr/fr/datasets/r/483b263b-98f7-4610-8b12-63e4630760de
+    communes:
+      url: https://raw.githubusercontent.com/AtelierCartographie/Khartis/master/public/data/map/FR-com-2017/france.json
+      chemin: data/communes.topo.json
+    departements:
+      url: https://france-geojson.gregoiredavid.fr/repo/departements.geojson
+      chemin: data/departements.geo.json
+    regions: 
+      url: https://france-geojson.gregoiredavid.fr/repo/regions.geojson
+      chemin: data/regions.geo.json
+
+coverage:
+  chemin: data/coverage.csv
+  separateur_csv: ;
+  noms_colonnes:
+      id_marche: idMarche
+      code_commune_acheteur: codeCommuneAcheteur
+      code_departement_acheteur: departementAcheteur
+      code_region_acheteur: codeRegionAcheteur
+      annee_marche: anneeNotification
+
+
+web:
+  titre_page : Couverture des Données Essentielles de la Commande Publique (DECP)
+  texte_haut_barre_laterale: Cette application propose une analyse de la couverture des DECP présentes dans le fichier augmenté publié quotidiennement sur [data.economie.gouv.fr](https://data.economie.gouv.fr/explore/dataset/decp_augmente/).
+  texte_bas_barre_laterale: Le code source de cette application est disponible [sur GitHub](https://github.com/139bercy/decp-couverture/). Pour plus d'informations sur les DECP, consultez la [documentation dédiée](https://139bercy.github.io/decp-docs/).
+  annees:
+    - 2021
+    - 2020
+    - 2019
+  folium:
+    # Laisser vide les champs pour utiliser les valeurs par défauts de Folium
+    tiles: "https://api.mapbox.com/styles/v1/istopopoki/ckg98kpoc010h19qusi9kxcct/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaXN0b3BvcG9raSIsImEiOiJjaW12eWw2ZHMwMGFxdzVtMWZ5NHcwOHJ4In0.VvZvyvK0UaxbFiAtak7aVw"
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors <a href="https://spdx.org/licenses/ODbL-1.0.html">ODbL</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'
+    
