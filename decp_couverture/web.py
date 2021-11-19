@@ -1,3 +1,5 @@
+import base64
+
 import streamlit as st
 from streamlit_folium import folium_static
 import folium
@@ -58,7 +60,7 @@ def chloropleth_layer(
         topojson=topojson_key,
         key_on=key_on,
         data=decp_stats,
-        columns=[column, "idMarche"],
+        columns=[column, "nombre_marches"],
         fill_color="YlGn",  #'YlOrRd',  #'YlGnBu',
         fill_opacity=0.6,
         line_opacity=0.5,
@@ -74,7 +76,7 @@ def chloropleth_layer(
 def build_chloropleth_layer_for_cities(topo_cities, decp_stats):
     return chloropleth_layer(
         "feature.properties.ID",
-        "codeCommuneAcheteur",
+        "code_commune_acheteur",
         topo_cities,
         decp_stats,
         topojson_key="objects.poly",
@@ -83,37 +85,30 @@ def build_chloropleth_layer_for_cities(topo_cities, decp_stats):
 
 def build_chloropleth_layer_for_departments(topo_departements, decp_stats):
     return chloropleth_layer(
-        "feature.properties.code", "departementAcheteur", topo_departements, decp_stats
+        "feature.properties.code",
+        "code_departement_acheteur",
+        topo_departements,
+        decp_stats,
     )
 
 
 def build_chloropleth_layer_for_regions(topo_regions, decp_stats):
     return chloropleth_layer(
-        "feature.properties.code", "codeRegionAcheteur", topo_regions, decp_stats
+        "feature.properties.code", "code_region_acheteur", topo_regions, decp_stats
     )
 
 
 def run():
 
-    decp_columns = [
-        "idMarche",
-        "anneeNotification",
-        "codeRegionAcheteur",
-        "departementAcheteur",
-        "codeCommuneAcheteur",
-    ]
-
-    decp = load.load_decp(columns=decp_columns)
-    # TODO : build decp_stats as part of a GitHub Action workflow
-    decp_stats = decp.groupby(
-        [
-            "anneeNotification",
-            "codeCommuneAcheteur",
-            "codeRegionAcheteur",
-            "departementAcheteur",
-        ]
-    )["idMarche"].nunique()
-    decp_stats = decp_stats.reset_index()
+    # TODO : Récupérer l'artifact
+    coverage = load.load_data_from_csv_file(
+        conf.coverage.chemin,
+        dtype={
+            "code_region_acheteur": str,
+            "code_departement_acheteur": str,
+            "code_commune_acheteur": str,
+        },
+    )
 
     st.set_page_config(
         page_title=conf.web.titre_page,
@@ -132,22 +127,22 @@ def run():
     )
     st.sidebar.markdown(conf.web.texte_bas_barre_laterale)
 
-    selected_year_decp_stats = decp_stats[
-        decp_stats["anneeNotification"] == selected_year
-    ]
+    selected_year_decp_stats = coverage[coverage.annee_marche == selected_year]
 
     selected_year_decp_stats_cities = (
-        selected_year_decp_stats.groupby(["codeCommuneAcheteur"])["idMarche"]
+        selected_year_decp_stats.groupby(["code_commune_acheteur"])["nombre_marches"]
         .sum()
         .reset_index()
     )
     selected_year_decp_stats_departments = (
-        selected_year_decp_stats.groupby(["departementAcheteur"])["idMarche"]
+        selected_year_decp_stats.groupby(["code_departement_acheteur"])[
+            "nombre_marches"
+        ]
         .sum()
         .reset_index()
     )
     selected_year_decp_stats_regions = (
-        selected_year_decp_stats.groupby(["codeRegionAcheteur"])["idMarche"]
+        selected_year_decp_stats.groupby(["code_region_acheteur"])["nombre_marches"]
         .sum()
         .reset_index()
     )
@@ -181,5 +176,20 @@ def run():
     added_layer = chloropleth_layer.add_to(folium_map)
     # folium_map.fit_bounds(added_layer.get_bounds())
     folium_static(folium_map)
-    # folium_map.save(f"map{selected_scale}.html")
-    # st.dataframe(stats.sort_values(by="idMarche", ascending=False).head(10))
+    
+    # st.markdown("Zones les plus représentées")
+    # hottest_zones = stats.sort_values(by="nombre_marches", ascending=False).head(5)
+    # st.dataframe(hottest_zones)
+
+    col1, col2 = st.columns(2)
+    if col1.button("Générer un lien de téléchargement de la carte"):
+        file_name = f"carteCouvertureDECP-{selected_year}-{selected_scale}.html"
+        path = f"./data/{file_name}"
+        folium_map.save(path)
+        with open(path, "rb") as f:
+            bytes = f.read()
+            b64 = base64.b64encode(bytes).decode()
+            href = f"<a href=\"data:file/html;base64,{b64}\" download='{file_name}'> {file_name} </a>"
+        col2.markdown(
+                f"{href}", unsafe_allow_html=True
+            )

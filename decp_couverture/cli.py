@@ -7,6 +7,7 @@ import sys
 import streamlit.cli
 
 from decp_couverture import web
+from decp_couverture import coverage
 from decp_couverture import download
 
 
@@ -16,6 +17,11 @@ def command_download(args=None):
         download.download_decp(rows=args.rows)
     if not args.decp_only:
         download.download_contours()
+
+
+def command_coverage(args=None):
+    """Calcule les statistiques de couverture des DECP"""
+    coverage.run()
 
 
 def command_web(args=None):
@@ -52,6 +58,10 @@ def get_parser():
         help="télécharger uniquement les contours (communes, départements, régions)",
         action="store_true",
     )
+    coverage_command = subparser.add_parser(
+        "coverage",
+        help="calcule les statistiques de couverture des DECP",
+    )
     web_command = subparser.add_parser(
         "web", help="lancer l'application web de présentation de la couverture"
     )
@@ -68,5 +78,7 @@ def run(args=None):
     args = parser.parse_args(args)
     if args.command == "download":
         command_download(args)
+    elif args.command == "coverage":
+        command_coverage(args)
     elif args.command == "web":
         command_web(args)

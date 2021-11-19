@@ -9,7 +9,7 @@ pandas.set_option("display.max_columns", 500)
 
 def load_data_from_csv_file(
     path: str,
-    sep: str = None,
+    sep: str = ";",
     rows: int = None,
     columns: list = None,
     index_col: str = None,
@@ -24,6 +24,12 @@ def load_data_from_csv_file(
         usecols=columns,
         dtype=dtype,
     )
+
+
+def save_data_to_csv_file(
+    dataframe: pandas.DataFrame, path: str, sep: str = ";", index: bool = True
+):
+    dataframe.to_csv(path, sep=sep, index=index)
 
 
 def open_json(path: str):
