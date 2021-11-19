@@ -40,7 +40,7 @@ def open_json(path: str):
 
 
 def load_decp(rows: int = None, columns: list = None):
-    path = conf.download.chemin_decp
+    path = conf.download.decp.chemin
     sep = ";"  # equivalent to "%3B"
     index_col = "id"
     if columns is not None and index_col not in columns:
@@ -57,15 +57,15 @@ def load_decp(rows: int = None, columns: list = None):
 
 
 def load_cities():
-    path = conf.download.chemin_communes_topojson
+    path = conf.download.contours.communes.chemin
     return open_json(path)
 
 
 def load_departments():
-    path = conf.download.chemin_departements_topojson
+    path = conf.download.contours.departements.chemin
     return open_json(path)
 
 
 def load_regions():
-    path = conf.download.chemin_regions_topojson
+    path = conf.download.contours.regions.chemin
     return open_json(path)

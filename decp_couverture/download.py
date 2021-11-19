@@ -21,8 +21,8 @@ def download_data_from_url_to_file(url: str, path: str, stream: bool = True):
 
 
 def download_decp(rows: int = None):
-    path = conf.download.chemin_decp
-    url = conf.download.base_url_decp
+    path = conf.download.decp.chemin
+    url = conf.download.decp.base_url
     url += "?format=csv&timezone=Europe/Paris&lang=fr&use_labels_for_header=true&csv_separator=%3B"
     if rows is not None:
         url += f"&rows={rows}"
@@ -30,12 +30,12 @@ def download_decp(rows: int = None):
 
 
 def download_contours():
-    path = conf.download.chemin_communes_topojson
-    url = conf.download.url_communes_topojson
+    path = conf.download.contours.communes.chemin
+    url = conf.download.contours.communes.base_url
     download_data_from_url_to_file(url, path, stream=True)
-    path = conf.download.chemin_departements_topojson
-    url = conf.download.url_departements_topojson
+    path = conf.download.contours.departements.chemin
+    url = conf.download.contours.departements.base_url
     download_data_from_url_to_file(url, path, stream=True)
-    path = conf.download.chemin_regions_topojson
-    url = conf.download.url_regions_topojson
+    path = conf.download.contours.regions.chemin
+    url = conf.download.contours.regions.base_url
     download_data_from_url_to_file(url, path, stream=True)

@@ -12,8 +12,10 @@ from decp_couverture import download
 
 def command_download(args=None):
     """Télécharge les DECP augmentées et les contours"""
-    download.download_decp(rows=args.rows)
-    download.download_contours()
+    if not args.contours_only:
+        download.download_decp(rows=args.rows)
+    if not args.decp_only:
+        download.download_contours()
 
 
 def command_web(args=None):
@@ -37,6 +39,18 @@ def get_parser():
         required=False,
         help="nombre de lignes de DECP à télécharger",
         type=int,
+    )
+    download_command.add_argument(
+        "--decp-only",
+        required=False,
+        help="télécharger uniquement les DECP",
+        action="store_true",
+    )
+    download_command.add_argument(
+        "--contours-only",
+        required=False,
+        help="télécharger uniquement les contours (communes, départements, régions)",
+        action="store_true",
     )
     web_command = subparser.add_parser(
         "web", help="lancer l'application web de présentation de la couverture"

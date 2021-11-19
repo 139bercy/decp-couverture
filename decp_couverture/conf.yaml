@@ -1,14 +1,20 @@
 download:
-  base_url_decp: https://data.economie.gouv.fr/explore/dataset/decp_augmente/download/
-  url_communes_topojson: https://raw.githubusercontent.com/AtelierCartographie/Khartis/master/public/data/map/FR-com-2017/france.json
-  url_departements_topojson: https://france-geojson.gregoiredavid.fr/repo/departements.geojson
-  url_regions_topojson: https://france-geojson.gregoiredavid.fr/repo/regions.geojson
-  # Il existe un jeu de données contenant les trois niveaux, mais problèmes d'affichage :
-  #https://www.data.gouv.fr/fr/datasets/r/483b263b-98f7-4610-8b12-63e4630760de
-  chemin_decp: data/decp_augmente.csv
-  chemin_communes_topojson: data/communes.topo.json
-  chemin_departements_topojson: data/departements.topo.json
-  chemin_regions_topojson: data/regions.topo.json
+  decp:
+    base_url: https://data.economie.gouv.fr/explore/dataset/decp_augmente/download/
+    chemin: data/decp_augmente.csv
+  contours:
+    # Il existe un jeu de données contenant les trois niveaux de contours, mais problèmes d'affichage :
+    # https://www.data.gouv.fr/fr/datasets/r/483b263b-98f7-4610-8b12-63e4630760de
+    communes:
+      base_url: https://raw.githubusercontent.com/AtelierCartographie/Khartis/master/public/data/map/FR-com-2017/france.json
+      chemin: data/communes.topo.json
+    departements:
+      base_url: https://france-geojson.gregoiredavid.fr/repo/departements.geojson
+      chemin: data/departements.geo.json
+    regions: 
+      base_url: https://france-geojson.gregoiredavid.fr/repo/regions.geojson
+      chemin: data/regions.geo.json
+
 
 web:
   titre_page : Couverture des Données Essentielles de la Commande Publique (DECP)
