@@ -14,21 +14,19 @@ from decp_couverture import conf
 
 @st.cache(ttl=864000)
 def cached__download_contours():
-    """Proxy de la fonction artifacts.get_last_artifact avec cache de 10j
-    """
+    """Proxy de la fonction artifacts.get_last_artifact avec cache de 10j"""
     download.download_contours()
 
 
 @st.cache(ttl=43200)
 def cached__get_last_artifact(artifact_name: str):
-    """Proxy de la fonction artifacts.get_last_artifact avec cache de 12h
-    """
+    """Proxy de la fonction artifacts.get_last_artifact avec cache de 12h"""
     return artifacts.get_last_artifact(artifact_name)
 
 
 @st.cache(ttl=None)
 def cached__get_coverage(coverage_artifact_url: str):
-    """ Obtient les dernières statistiques de couverture disponibles sur github.com
+    """Obtient les dernières statistiques de couverture disponibles sur github.com
 
     Args:
         coverage_artifact_url (str): URL de l'artifact à charger
@@ -50,25 +48,26 @@ def cached__get_coverage(coverage_artifact_url: str):
     )
     return coverage
 
+
 @st.cache(ttl=43200)
 def cached__load_cities():
-    """Proxy de la fonction load.load_cities avec cache de 12h
-    """
+    """Proxy de la fonction load.load_cities avec cache de 12h"""
     return load.load_cities()
+
 
 @st.cache(ttl=43200)
 def cached__load_departments():
-    """Proxy de la fonction load.load_cities avec cache de 12h
-    """
+    """Proxy de la fonction load.load_cities avec cache de 12h"""
     return load.load_departments()
+
 
 @st.cache(ttl=43200)
 def cached__load_regions():
-    """Proxy de la fonction load.load_regions avec cache de 12h
-    """
+    """Proxy de la fonction load.load_regions avec cache de 12h"""
     return load.load_regions()
 
-#@st.cache(ttl=86400)
+
+# @st.cache(ttl=86400)
 def contours_layer_topojson(geo_data, topojson_key):
     """Construit une couche de contours pour Folium à partir d'un topojson.
 
@@ -81,7 +80,8 @@ def contours_layer_topojson(geo_data, topojson_key):
     """
     return folium.TopoJson(geo_data, topojson_key)
 
-#@st.cache(ttl=86400)
+
+# @st.cache(ttl=86400)
 def contours_layer_geojson(geo_data):
     """Construit une couche de contours pour Folium à partir d'un geojson.
 
@@ -93,7 +93,8 @@ def contours_layer_geojson(geo_data):
     """
     return folium.GeoJson(geo_data)
 
-#@st.cache(ttl=86400)
+
+# @st.cache(ttl=86400)
 def chloropleth_layer(
     key_on: str,
     column: str,
@@ -156,7 +157,8 @@ def build_chloropleth_layer_for_regions(topo_regions, decp_stats):
         "feature.properties.code", "code_region_acheteur", topo_regions, decp_stats
     )
 
-#@st.cache(ttl=86400)
+
+# @st.cache(ttl=86400)
 def init_map():
     """Initialise une carte folium.
 
@@ -170,7 +172,6 @@ def init_map():
         attr=conf.web.folium.attribution,
         # crs=None #'EPSG4326' #'EPSG3857'
     )
-
 
 
 def run():
