@@ -1,4 +1,5 @@
 import base64
+import weakref
 
 import streamlit as st
 from streamlit_folium import folium_static
@@ -11,17 +12,65 @@ from decp_couverture import artifacts
 from decp_couverture import conf
 
 
-@st.cache(ttl=864000)  # 10 jours
+@st.cache(ttl=864000)
 def cached__download_contours():
+    """Proxy de la fonction artifacts.get_last_artifact avec cache de 10j
+    """
     download.download_contours()
 
-@st.cache(ttl=43200)  # 12 heures
+
+@st.cache(ttl=43200)
 def cached__get_last_artifact(artifact_name: str):
+    """Proxy de la fonction artifacts.get_last_artifact avec cache de 12h
+    """
     return artifacts.get_last_artifact(artifact_name)
 
 
+@st.cache(ttl=None)
+def cached__get_coverage(coverage_artifact_url: str):
+    """ Obtient les dernières statistiques de couverture disponibles sur github.com
+
+    Args:
+        coverage_artifact_url (str): URL de l'artifact à charger
+
+    Returns:
+        pandas.DataFrame: Statistiques de couverture par région, département, commune, année.
+    """
+    auth = artifacts.get_github_auth()
+    download.download_data_from_url_to_file(
+        coverage_artifact_url, "data/coverage.zip", stream=False, auth=auth
+    )
+    coverage = load.load_data_from_csv_file(
+        "data/coverage.zip",
+        dtype={
+            "code_region_acheteur": str,
+            "code_departement_acheteur": str,
+            "code_commune_acheteur": str,
+        },
+    )
+    return coverage
+
+@st.cache(ttl=43200)
+def cached__load_cities():
+    """Proxy de la fonction load.load_cities avec cache de 12h
+    """
+    return load.load_cities()
+
+@st.cache(ttl=43200)
+def cached__load_departments():
+    """Proxy de la fonction load.load_cities avec cache de 12h
+    """
+    return load.load_departments()
+
+@st.cache(ttl=43200)
+def cached__load_regions():
+    """Proxy de la fonction load.load_regions avec cache de 12h
+    """
+    return load.load_regions()
+
+#@st.cache(ttl=86400)
 def contours_layer_topojson(geo_data, topojson_key):
-    """Construit une couche de contours pour Folium à partir d'un topojson
+    """Construit une couche de contours pour Folium à partir d'un topojson.
 
     Args:
         geo_data (dict): Données géographiques (format topojson)
@@ -32,9 +81,9 @@ def contours_layer_topojson(geo_data, topojson_key):
     """
     return folium.TopoJson(geo_data, topojson_key)
 
-
+#@st.cache(ttl=86400)
 def contours_layer_geojson(geo_data):
-    """Construit une couche de contours pour Folium à partir d'un geojson
+    """Construit une couche de contours pour Folium à partir d'un geojson.
 
     Args:
         geo_data (dict): Données géographiques (format geojson)
@@ -44,7 +93,7 @@ def contours_layer_geojson(geo_data):
     """
     return folium.GeoJson(geo_data)
 
-
+#@st.cache(ttl=86400)
 def chloropleth_layer(
     key_on: str,
     column: str,
@@ -52,7 +101,7 @@ def chloropleth_layer(
     decp_stats: pandas.DataFrame,
     topojson_key=None,
 ):
-    """Construit une couche chloropleth pour Folium à partir de données géographiques (format topojson ou geojson)
+    """Construit une couche chloropleth pour Folium à partir de données géographiques (format topojson ou geojson).
 
     Args:
         key_on (str): [description]
@@ -107,18 +156,24 @@ def build_chloropleth_layer_for_regions(topo_regions, decp_stats):
         "feature.properties.code", "code_region_acheteur", topo_regions, decp_stats
     )
 
+#@st.cache(ttl=86400)
+def init_map():
+    """Initialise une carte folium.
+
+    Returns:
+        folium.Map
+    """
+    return folium.Map(
+        location=[47, 2],
+        zoom_start=6,
+        tiles=conf.web.folium.tiles,
+        attr=conf.web.folium.attribution,
+        # crs=None #'EPSG4326' #'EPSG3857'
+    )
+
+
 
 def run():
-
-    # TODO : Récupérer l'artifact
-    coverage = load.load_data_from_csv_file(
-        conf.coverage.chemin,
-        dtype={
-            "code_region_acheteur": str,
-            "code_departement_acheteur": str,
-            "code_commune_acheteur": str,
-        },
-    )
 
     st.set_page_config(
         page_title=conf.web.titre_page,
@@ -138,7 +193,11 @@ def run():
     st.sidebar.markdown(conf.web.texte_bas_barre_laterale)
 
     cached__download_contours()
-    cached__get_last_artifact("coverage.csv")
+    (
+        last_coverage_artifact_datetime,
+        last_coverage_artifact_url,
+    ) = cached__get_last_artifact("coverage.csv")
+    coverage = cached__get_coverage(last_coverage_artifact_url)
 
     selected_year_decp_stats = coverage[coverage.annee_marche == selected_year]
 
@@ -176,13 +235,8 @@ def run():
         chloropleth_layer = build_chloropleth_layer_for_regions(topo, stats)
         # chloropleth_layer = build_chloropleth_layer("objects.a_reg2021_2154.geometries", "properties.reg", "codeRegionAcheteur", topo, stats)
 
-    folium_map = folium.Map(
-        location=[47, 2],
-        zoom_start=6,
-        tiles=conf.web.folium.tiles,
-        attr=conf.web.folium.attribution,
-        # crs=None #'EPSG4326' #'EPSG3857'
-    )
+    folium_map = init_map()
+
     st.markdown(
         f"{len(stats)} {selected_scale.lower()} ont des marchés représentés dans les DECP au cours de l'année {selected_year}."
     )

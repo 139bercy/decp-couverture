@@ -8,6 +8,7 @@ import requests
 
 from decp_couverture import conf
 
+
 def get_artifacts():
     """Obtient les artifacts depuis le projet GitHub.
 
@@ -45,6 +46,7 @@ def get_github_auth():
     token = os.environ["GITHUB_TOKEN"]
     return (username, token)
 
+
 def get_last_artifact(artifact_name: str):
     """Obtient le dernier artifact disponible.
 
@@ -72,4 +74,3 @@ def get_last_artifact(artifact_name: str):
     last_result = sorted(results.items(), reverse=True)[0]
     logging.debug(f"Dernier artifact disponible : {last_result}")
     return last_result
-
