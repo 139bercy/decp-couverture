@@ -7,6 +7,7 @@ import pandas
 
 from decp_couverture import download
 from decp_couverture import load
+from decp_couverture import artifacts
 from decp_couverture import conf
 
 
