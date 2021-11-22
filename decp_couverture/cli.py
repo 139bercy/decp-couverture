@@ -40,7 +40,7 @@ def get_parser():
     subparser = parser.add_subparsers(dest="command")
     download_command = subparser.add_parser(
         "download",
-        help="télécharger les DECP (.csv depuis economie.gouv.fr) et les contours de cartes",
+        help="télécharger les DECP (economie.gouv.fr), la base Sirene (INSEE) et les contours de cartes",
     )
     download_command.add_argument(
         "--rows",

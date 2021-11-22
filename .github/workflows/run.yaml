@@ -24,6 +24,9 @@ jobs:
       - name: Run the CLI command to download DECP data
         run: |
           pipenv run python . download --decp-only
+      - name: Run the CLI command to download INSEE (Sirene) data
+        run: |
+          pipenv run python . download --sirens-only
       - name: Run the coverage analysis
         run: |
           pipenv run python . coverage

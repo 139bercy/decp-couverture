@@ -23,7 +23,7 @@ pipenv run python . [-h] {download,coverage,web} ...
 
 positional arguments:
   {download,coverage,web}
-    download            télécharger les DECP (.csv depuis economie.gouv.fr) et les contours de cartes
+    download            télécharger les DECP (economie.gouv.fr), la base Sirene (INSEE) et les contours de cartes
     coverage            calcule les statistiques de couverture des DECP
     web                 lancer l'application web de présentation de la couverture
 
@@ -62,6 +62,6 @@ Deux systèmes fonctionnent en parallèle. Ils utilisent tous les deux la branch
 
 * Un [*workflow*](.github/workflows/run.yaml) automatisé analyse chaque 1er du mois la qualité de données en exécutant les commandes `download` puis `coverage`. Ce workflow s'exécute sur le service GitHub Actions. Deux *artifacts* au format JSON sont générés par ce *workflow* puis stockés par GitHub :
   * Le fichier original des DECP augmentées, issu de la commande `download --decp-only`
-  * Le fichier d'analyyse de couverture par année/commune/département/région, issu de la commande `coverage`, au format CSV
+  * Le fichier d'analyse de couverture par année/commune/département/région, issu de la commande `coverage`, au format CSV
 
 * L'application Web de présentation des résultats est hébergée sur le service streamlit.io. Elle peut aussi être exécutée sur un poste avec la commande `web`. L'application récupère les résultats d'analyse (stockés sous forme d'*artifacts*) et les affiche sur la page sous forme de carte.
