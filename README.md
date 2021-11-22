@@ -60,7 +60,7 @@ Un [*workflow*](.github/workflows/tests.yaml) se déclenche à chaque *push* sur
 
 Deux systèmes fonctionnent en parallèle. Ils utilisent tous les deux la branche *main* du projet.
 
-* Un [*workflow*](.github/workflows/run.yaml) automatisé analyse chaque 1er du mois la qualité de données en exécutant les commandes `download` puis `audit`. Ce workflow s'exécute sur le service GitHub Actions. Deux *artifacts* au format JSON sont générés par ce *workflow* puis stockés par GitHub :
+* Un [*workflow*](.github/workflows/run.yaml) automatisé analyse chaque 1er du mois la qualité de données en exécutant les commandes `download` puis `coverage`. Ce workflow s'exécute sur le service GitHub Actions. Deux *artifacts* au format JSON sont générés par ce *workflow* puis stockés par GitHub :
   * Le fichier original des DECP augmentées, issu de la commande `download --decp-only`
   * Le fichier d'analyyse de couverture par année/commune/département/région, issu de la commande `coverage`, au format CSV
 
