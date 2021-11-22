@@ -121,10 +121,10 @@ def chloropleth_layer(
         key_on=key_on,
         data=decp_stats,
         columns=[column, "nombre_marches"],
-        fill_color= "YlGn", #"RdYlGn", #"YlGn",  #'YlOrRd',  #'YlGnBu',
+        fill_color="YlGn",  # "RdYlGn", #"YlGn",  #'YlOrRd',  #'YlGnBu',
         fill_opacity=0.7,
         line_weight=0,
-        nan_fill_color="black", #"#800000",
+        nan_fill_color="black",  # "#800000",
         nan_fill_opacity=0.3,
         highlight=True,
         legend_name="Nombre de marchés recensés dans les DECP",
@@ -199,7 +199,9 @@ def run():
     ) = cached__get_last_artifact("coverage.csv")
     coverage = cached__get_coverage(last_coverage_artifact_url)
 
-    st.sidebar.markdown(f"*Données mises à jour le {last_coverage_artifact_datetime.strftime('%d/%m/%Y')}.*")
+    st.sidebar.markdown(
+        f"*Données mises à jour le {last_coverage_artifact_datetime.strftime('%d/%m/%Y')}.*"
+    )
 
     selected_year_decp_stats = coverage[coverage.annee_marche == selected_year]
 

@@ -6,8 +6,6 @@ download:
     chemin: data/decp_augmente.csv
     separateur_csv: ;
   contours:
-    # Il existe un jeu de données contenant les trois niveaux de contours, mais problèmes d'affichage :
-    # https://www.data.gouv.fr/fr/datasets/r/483b263b-98f7-4610-8b12-63e4630760de
     communes:
       url: https://raw.githubusercontent.com/AtelierCartographie/Khartis/master/public/data/map/FR-com-2017/france.json
       chemin: data/communes.topo.json
@@ -17,16 +15,29 @@ download:
     regions: 
       url: https://france-geojson.gregoiredavid.fr/repo/regions.geojson
       chemin: data/regions.geo.json
+    # Il existe un jeu de données contenant les trois niveaux de contours, mais son exploitation avec Folium est problématique :
+    # https://www.data.gouv.fr/fr/datasets/r/483b263b-98f7-4610-8b12-63e4630760de
+  sirens:
+    url: https://www.data.gouv.fr/fr/datasets/r/0651fb76-bcf3-4f6a-a38d-bc04fa708576
+    chemin: data/sirens.zip
+    separateur_csv: ','
+    # Possibilité d'utiliser l'API INSEE, mais les codes communesne smeblent pas disponibles : 
+    # https://api.insee.fr/entreprises/sirene/V3/siren?q=periode(categorieJuridiqueUniteLegale:4*) OR siren:1* OR siren:2*&date:2100-12-31&champs=siren&masquerValeursNulles=true
 
 coverage:
   chemin: data/coverage.csv
   separateur_csv: ;
-  noms_colonnes:
+  noms_colonnes_decp:
       id_marche: idMarche
       code_commune_acheteur: codeCommuneAcheteur
       code_departement_acheteur: departementAcheteur
       code_region_acheteur: codeRegionAcheteur
       annee_marche: anneeNotification
+      siren_acheteur: idAcheteur
+  noms_colonnes_sirens:
+      siren_acheteur: siren
+      siret_acheteur: siret
+      code_commune_acheteur: codeCommuneEtablissement
 
 
 web:

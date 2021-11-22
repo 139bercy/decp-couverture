@@ -13,15 +13,17 @@ from decp_couverture import download
 
 def command_download(args=None):
     """Télécharge les DECP augmentées et les contours"""
-    if not args.contours_only:
+    if not args.contours_only and not args.sirens_only:
         download.download_decp(rows=args.rows)
-    if not args.decp_only:
+    if not args.decp_only and not args.sirens_only:
         download.download_contours()
+    if not args.contours_only and not args.decp_only:
+        download.download_sirens()
 
 
 def command_coverage(args=None):
     """Calcule les statistiques de couverture des DECP"""
-    coverage.run()
+    coverage.run(args.rows)
 
 
 def command_web(args=None):
@@ -58,9 +60,21 @@ def get_parser():
         help="télécharger uniquement les contours (communes, départements, régions)",
         action="store_true",
     )
+    download_command.add_argument(
+        "--sirens-only",
+        required=False,
+        help="télécharger uniquement les SIRENs (base Sirene)",
+        action="store_true",
+    )
     coverage_command = subparser.add_parser(
         "coverage",
         help="calcule les statistiques de couverture des DECP",
+    )
+    coverage_command.add_argument(
+        "--rows",
+        required=False,
+        help="nombre de lignes de DECP et base Sirene à utiliser",
+        type=int,
     )
     web_command = subparser.add_parser(
         "web", help="lancer l'application web de présentation de la couverture"

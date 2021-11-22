@@ -27,9 +27,13 @@ def load_data_from_csv_file(
 
 
 def save_data_to_csv_file(
-    dataframe: pandas.DataFrame, path: str, sep: str = ";", index: bool = True
+    dataframe: pandas.DataFrame,
+    path: str,
+    sep: str = ";",
+    index: bool = True,
+    float_format=None,
 ):
-    dataframe.to_csv(path, sep=sep, index=index)
+    dataframe.to_csv(path, sep=sep, index=index, float_format=float_format)
 
 
 def open_json(path: str):
@@ -56,9 +60,36 @@ def load_decp(rows: int = None, columns: list = None):
         path,
         sep=sep,
         rows=rows,
-        index_col=index_col,
         columns=columns,
-        dtype={"codeRegionAcheteur": str},
+        dtype={
+            "codeRegionAcheteur": str,
+            "anneeNotification": "Int32",
+            "sirenAcheteur": str,
+            "siretAcheteur": str,
+            "idAcheteur": str,
+            "sirenAcheteurValide": bool,
+        },
+    )
+
+
+def load_sirens(rows: int = None, columns: list = None):
+    path = conf.download.sirens.chemin
+    sep = conf.download.sirens.separateur_csv
+    index_col = "siret"
+    if columns is not None and index_col not in columns:
+        columns.append(index_col)
+    return load_data_from_csv_file(
+        path,
+        sep=sep,
+        rows=rows,
+        # index_col=index_col,
+        columns=columns,
+        dtype={
+            "siren": str,
+            "siret": str,
+            "nic": int,
+            "codeCommuneEtablissement": str,
+        },
     )
 
 
