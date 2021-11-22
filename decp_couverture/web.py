@@ -44,6 +44,10 @@ def cached__get_coverage(coverage_artifact_url: str):
             "code_region_acheteur": str,
             "code_departement_acheteur": str,
             "code_commune_acheteur": str,
+            "annee_marche": int,
+            "nombre_marches": int,
+            "nombre_sirens_decp": int,
+            "nombre_sirens_insee": int,
         },
     )
     return coverage
@@ -97,16 +101,18 @@ def contours_layer_geojson(geo_data):
 # @st.cache(ttl=86400)
 def chloropleth_layer(
     key_on: str,
-    column: str,
+    key_column: str,
     geo_data: dict,
+    data_column: str,
     decp_stats: pandas.DataFrame,
     topojson_key=None,
+    legend: str = None,
 ):
     """Construit une couche chloropleth pour Folium à partir de données géographiques (format topojson ou geojson).
 
     Args:
         key_on (str): [description]
-        column (str): [description]
+        key_column (str): [description]
         geo_data (dict): Données géographiques (format geojson ou topojson)
         decp_stats (pandas.DataFrame): Données pour la couleur du chloropleth
         topojson_key (str, optional): Clé topojson. Defaults to None.
@@ -120,40 +126,49 @@ def chloropleth_layer(
         topojson=topojson_key,
         key_on=key_on,
         data=decp_stats,
-        columns=[column, "nombre_marches"],
+        columns=[key_column, data_column],
         fill_color="YlGn",  # "RdYlGn", #"YlGn",  #'YlOrRd',  #'YlGnBu',
         fill_opacity=0.7,
         line_weight=0,
         nan_fill_color="black",  # "#800000",
         nan_fill_opacity=0.3,
         highlight=True,
-        legend_name="Nombre de marchés recensés dans les DECP",
+        legend_name=legend,
     )
     return choropleth
 
 
-def build_chloropleth_layer_for_cities(topo_cities, decp_stats):
+def build_chloropleth_layer_for_cities(topo_cities, decp_stats, data_column, legend=None):
     return chloropleth_layer(
         "feature.properties.ID",
         "code_commune_acheteur",
         topo_cities,
+        data_column,
         decp_stats,
         topojson_key="objects.poly",
+        legend=legend,
     )
 
 
-def build_chloropleth_layer_for_departments(topo_departements, decp_stats):
+def build_chloropleth_layer_for_departments(topo_departements, decp_stats, data_column, legend=None):
     return chloropleth_layer(
         "feature.properties.code",
         "code_departement_acheteur",
         topo_departements,
+        data_column,
         decp_stats,
+        legend=legend,
     )
 
 
-def build_chloropleth_layer_for_regions(topo_regions, decp_stats):
+def build_chloropleth_layer_for_regions(topo_regions, decp_stats, data_column, legend=None):
     return chloropleth_layer(
-        "feature.properties.code", "code_region_acheteur", topo_regions, decp_stats
+        "feature.properties.code",
+        "code_region_acheteur",
+        topo_regions,
+        data_column,
+        decp_stats,
+        legend=legend,
     )
 
 
@@ -206,51 +221,113 @@ def run():
     selected_year_decp_stats = coverage[coverage.annee_marche == selected_year]
 
     selected_year_decp_stats_cities = (
-        selected_year_decp_stats.groupby(["code_commune_acheteur"])["nombre_marches"]
-        .sum()
+        selected_year_decp_stats.groupby(["code_commune_acheteur"])
+        .agg(
+            nombre_marches=("nombre_marches", "sum"),
+            nombre_sirens_decp=("nombre_sirens_decp", "sum"),
+            nombre_sirens_insee=("nombre_sirens_insee", "sum"),
+        )
         .reset_index()
     )
+    selected_year_decp_stats_cities[
+        "sirens_couverts"
+    ] = selected_year_decp_stats_cities.nombre_sirens_decp.fillna(
+        1
+    ) / selected_year_decp_stats_cities.nombre_sirens_insee.fillna(
+        1
+    )
+    selected_year_decp_stats_cities["pourcentage_sirens_couverts"] = (
+        (selected_year_decp_stats_cities.sirens_couverts * 100).round(0).astype(int)
+    )
+    selected_year_decp_stats_cities["pourcentage_sirens_couverts"] = selected_year_decp_stats_cities["pourcentage_sirens_couverts"].clip(lower=0, upper=100)
+    del selected_year_decp_stats_cities["sirens_couverts"]
+    del selected_year_decp_stats_cities["nombre_sirens_decp"]
+    del selected_year_decp_stats_cities["nombre_sirens_insee"]
     selected_year_decp_stats_departments = (
-        selected_year_decp_stats.groupby(["code_departement_acheteur"])[
-            "nombre_marches"
-        ]
-        .sum()
+        selected_year_decp_stats.groupby(["code_departement_acheteur"])
+        .agg(
+            nombre_marches=("nombre_marches", "sum"),
+            nombre_sirens_decp=("nombre_sirens_decp", "sum"),
+            nombre_sirens_insee=("nombre_sirens_insee", "sum"),
+        )
         .reset_index()
     )
+    selected_year_decp_stats_departments[
+        "sirens_couverts"
+    ] = selected_year_decp_stats_departments.nombre_sirens_decp.fillna(
+        1
+    ) / selected_year_decp_stats_departments.nombre_sirens_insee.fillna(
+        1
+    )
+    selected_year_decp_stats_departments["pourcentage_sirens_couverts"] = (
+        (selected_year_decp_stats_departments.sirens_couverts * 100)
+        .round(0)
+        .astype(int)
+    )
+    del selected_year_decp_stats_departments["sirens_couverts"]
+    del selected_year_decp_stats_departments["nombre_sirens_decp"]
+    del selected_year_decp_stats_departments["nombre_sirens_insee"]
     selected_year_decp_stats_regions = (
-        selected_year_decp_stats.groupby(["code_region_acheteur"])["nombre_marches"]
-        .sum()
+        selected_year_decp_stats.groupby(["code_region_acheteur"])
+        .agg(
+            nombre_marches=("nombre_marches", "sum"),
+            nombre_sirens_decp=("nombre_sirens_decp", "sum"),
+            nombre_sirens_insee=("nombre_sirens_insee", "sum"),
+        )
         .reset_index()
     )
+    selected_year_decp_stats_regions[
+        "sirens_couverts"
+    ] = selected_year_decp_stats_regions.nombre_sirens_decp.fillna(
+        1
+    ) / selected_year_decp_stats_regions.nombre_sirens_insee.fillna(
+        1
+    )
+    selected_year_decp_stats_regions["pourcentage_sirens_couverts"] = (
+        (selected_year_decp_stats_regions.sirens_couverts * 100).round(0).astype(int)
+    )
+    del selected_year_decp_stats_regions["sirens_couverts"]
+    del selected_year_decp_stats_regions["nombre_sirens_decp"]
+    del selected_year_decp_stats_regions["nombre_sirens_insee"]
+
+    options_dict = {
+        "Pourcentage de la base Sirene INSEE représentée dans les DECP": "pourcentage_sirens_couverts",
+        "Nombre de marchés recensés dans les DECP": "nombre_marches",
+    }
+    selected_option = st.radio("Indicateur à représenter:", options_dict.keys())
+    selected_column = options_dict[selected_option]
 
     if selected_scale == "Communes":
         topo = load.load_cities()
         stats = selected_year_decp_stats_cities
-        chloropleth_layer = build_chloropleth_layer_for_cities(topo, stats)
+        chloropleth_layer = build_chloropleth_layer_for_cities(
+            topo, stats, selected_column, legend=selected_option
+        )
         # chloropleth_layer = build_chloropleth_layer("objects.a_com2021_2154.geometries", "properties.codgeo", "codeCommuneAcheteur", topo, stats)
     elif selected_scale == "Départements":
         topo = load.load_departments()
         stats = selected_year_decp_stats_departments
-        chloropleth_layer = build_chloropleth_layer_for_departments(topo, stats)
+        chloropleth_layer = build_chloropleth_layer_for_departments(
+            topo, stats, selected_column, legend=selected_option
+        )
         # chloropleth_layer = build_chloropleth_layer("objects.a_dep2021_2154.geometries", "properties.dep", "departementAcheteur", topo, stats)
     elif selected_scale == "Régions":
         topo = load.load_regions()
         stats = selected_year_decp_stats_regions
-        chloropleth_layer = build_chloropleth_layer_for_regions(topo, stats)
+        chloropleth_layer = build_chloropleth_layer_for_regions(
+            topo, stats, selected_column, legend=selected_option
+        )
         # chloropleth_layer = build_chloropleth_layer("objects.a_reg2021_2154.geometries", "properties.reg", "codeRegionAcheteur", topo, stats)
-
-    folium_map = init_map()
 
     st.markdown(
         f"{len(stats)} {selected_scale.lower()} ont des marchés représentés dans les DECP au cours de l'année {selected_year}."
     )
+
+    folium_map = init_map()
+
     added_layer = chloropleth_layer.add_to(folium_map)
     # folium_map.fit_bounds(added_layer.get_bounds())
     folium_static(folium_map)
-
-    # st.markdown("Zones les plus représentées")
-    # hottest_zones = stats.sort_values(by="nombre_marches", ascending=False).head(5)
-    # st.dataframe(hottest_zones)
 
     col1, col2 = st.columns(2)
     if col1.button("Générer un lien de téléchargement de la carte"):
@@ -262,3 +339,17 @@ def run():
             b64 = base64.b64encode(bytes).decode()
             href = f"<a href=\"data:file/html;base64,{b64}\" download='{file_name}'> {file_name} </a>"
         col2.markdown(f"{href}", unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+    col1.markdown(f"**{selected_scale} avec le plus de marchés :**")
+    markdown_col1 = f"| Code {selected_scale.lower()} | Nombre de marchés | \n | ------------- |:-------------:|"
+    zones_most_markets = stats.sort_values(by="nombre_marches", ascending=False).head(5)
+    for zone, num_markets, _ in zones_most_markets.values.tolist():
+        markdown_col1 += f"\n | {zone} | {num_markets} marchés |"
+    col1.markdown(markdown_col1)
+    col2.markdown(f"**{selected_scale} avec le plus de SIREN couverts :**")
+    zones_most_sirens = stats.sort_values(by="pourcentage_sirens_couverts", ascending=False).head(5)
+    markdown_col2 = f"| Code {selected_scale.lower()} | Pourcentage couvert | \n | ------------- |:-------------:|"
+    for zone, _, covered_percentage in zones_most_sirens.values.tolist():
+        markdown_col2 += f"\n | {zone} | {covered_percentage}% |"
+    col2.markdown(markdown_col2)

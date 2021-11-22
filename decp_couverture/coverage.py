@@ -86,7 +86,5 @@ def run(rows: int = None):
     coverage_stats = coverage_stats.merge(
         sirens_stats, how="left", left_on="code_commune_acheteur", right_index=True
     )
-    # coverage_stats["sirens_couverts"] = coverage_stats.nombre_sirens_decp.fillna(1) / coverage_stats.nombre_sirens_insee.fillna(1)
-    # coverage_stats["pourcentage_sirens_couverts"] = (coverage_stats.sirens_couverts * 100).round(0).astype(int)
     path = conf.coverage.chemin
     load.save_data_to_csv_file(coverage_stats, path, index=False, float_format="%.2f")
