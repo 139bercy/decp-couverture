@@ -291,7 +291,7 @@ def run():
     del selected_year_decp_stats_regions["nombre_sirens_insee"]
 
     options_dict = {
-        "Pourcentage de la base Sirene INSEE représentée dans les DECP": "pourcentage_sirens_couverts",
+        "Part des acheteurs publics représentés dans les DECP": "pourcentage_sirens_couverts",
         "Nombre de marchés recensés dans les DECP": "nombre_marches",
     }
     selected_option = st.radio("Indicateur à représenter:", options_dict.keys())
@@ -329,27 +329,30 @@ def run():
     # folium_map.fit_bounds(added_layer.get_bounds())
     folium_static(folium_map)
 
-    col1, col2 = st.columns(2)
-    if col1.button("Générer un lien de téléchargement de la carte"):
-        file_name = f"carteCouvertureDECP-{selected_year}-{selected_scale}.html"
-        path = f"./data/{file_name}"
-        folium_map.save(path)
-        with open(path, "rb") as f:
-            bytes = f.read()
-            b64 = base64.b64encode(bytes).decode()
-            href = f"<a href=\"data:file/html;base64,{b64}\" download='{file_name}'> {file_name} </a>"
-        col2.markdown(f"{href}", unsafe_allow_html=True)
+    # col1, col2 = st.columns(2)
+    # if col1.button("Générer un lien de téléchargement de la carte"):
+    #     file_name = f"carteCouvertureDECP-{selected_year}-{selected_scale}.html"
+    #     path = f"./data/{file_name}"
+    #     folium_map.save(path)
+    #     with open(path, "rb") as f:
+    #         bytes = f.read()
+    #         b64 = base64.b64encode(bytes).decode()
+    #         href = f"<a href=\"data:file/html;base64,{b64}\" download='{file_name}'> {file_name} </a>"
+    #     col2.markdown(f"{href}", unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
-    col1.markdown(f"**{selected_scale} avec le plus de marchés :**")
-    markdown_col1 = f"| Code {selected_scale.lower()} | Nombre de marchés | \n | ------------- |:-------------:|"
+    col1, col2 = st.columns([2,3])
+    col1.markdown(f"**{selected_scale} avec le plus de marchés:**")
+    markdown_col1 = f"| Code | Nombre de marchés | \n | ------------- |:-------------:|"
     zones_most_markets = stats.sort_values(by="nombre_marches", ascending=False).head(5)
     for zone, num_markets, _ in zones_most_markets.values.tolist():
         markdown_col1 += f"\n | {zone} | {num_markets} marchés |"
     col1.markdown(markdown_col1)
-    col2.markdown(f"**{selected_scale} avec le plus de SIREN couverts :**")
+    col2.markdown(f"**{selected_scale} avec le plus d'acheteurs publics représentés:**")
     zones_most_sirens = stats.sort_values(by="pourcentage_sirens_couverts", ascending=False).head(5)
-    markdown_col2 = f"| Code {selected_scale.lower()} | Pourcentage couvert | \n | ------------- |:-------------:|"
+    markdown_col2 = f"| Code {selected_scale.lower()} | Acheteurs publics représentés | \n | ------------- |:-------------:|"
     for zone, _, covered_percentage in zones_most_sirens.values.tolist():
         markdown_col2 += f"\n | {zone} | {covered_percentage}% |"
     col2.markdown(markdown_col2)
+
+    st.markdown("\n")
+    st.markdown("*Le nombre d'acheteurs publics correspond au nombre d'entités référencées dans le répertoire Sirene, mis à disposition par l'[INSEE](https://www.insee.fr/fr/information/3591226) et disponible sur [data.gouv.fr](https://www.data.gouv.fr/fr/datasets/base-sirene-des-entreprises-et-de-leurs-etablissements-siren-siret/), dont le code SIREN débute par [le chiffre 1 ou 2](https://www.insee.fr/fr/metadonnees/definition/c2047).*")
