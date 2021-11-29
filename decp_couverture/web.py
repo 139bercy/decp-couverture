@@ -169,7 +169,7 @@ def build_chloropleth_layer_for_departments(topo_departements, decp_stats, data_
         decp_stats,
         legend=legend,
         tooltip_fields=["nom", "code"],
-        tooltip_aliases=["Département", "Code"],
+        tooltip_aliases=["Département", "Code département"],
     )
 
 
@@ -182,7 +182,7 @@ def build_chloropleth_layer_for_regions(topo_regions, decp_stats, data_column, l
         decp_stats,
         legend=legend,
         tooltip_fields=["nom", "code"],
-        tooltip_aliases=["Région", "Code"],
+        tooltip_aliases=["Région", "Code région"],
     )
 
 
