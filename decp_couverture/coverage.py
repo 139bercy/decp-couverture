@@ -40,6 +40,8 @@ def run(rows: int = None):
     print(
         f"Nombre de marchés réduit de {num_marches_tous_siren} à {num_marches_siren_valide} en éliminant les SIREN invalides"
     )
+    # Assurer que la colonne contient un SIREN (9 caractères)
+    decp.siren_acheteur = decp.siren_acheteur.str[:9]
     decp = filter_public_sirens(decp, "siren_acheteur")
     num_marches_siren_publiques = len(decp)
     print(
