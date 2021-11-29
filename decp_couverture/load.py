@@ -63,6 +63,7 @@ def load_decp(rows: int = None, columns: list = None):
         columns=columns,
         dtype={
             "codeRegionAcheteur": str,
+            "codeDepartementAcheteur": str,
             "anneeNotification": "Int32",
             "sirenAcheteur": str,
             "siretAcheteur": str,
