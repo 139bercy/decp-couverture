@@ -107,6 +107,8 @@ def chloropleth_layer(
     decp_stats: pandas.DataFrame,
     topojson_key=None,
     legend: str = None,
+    tooltip_fields: list = None,
+    tooltip_aliases: list = None
 ):
     """Construit une couche chloropleth pour Folium à partir de données géographiques (format topojson ou geojson).
 
@@ -135,6 +137,12 @@ def chloropleth_layer(
         highlight=True,
         legend_name=legend,
     )
+    if tooltip_fields is not None:
+        choropleth.geojson.add_child(folium.features.GeoJsonTooltip(
+            fields=tooltip_fields,
+            aliases=tooltip_aliases,
+            #style=('background-color: white; color: black;')
+        ))
     return choropleth
 
 
@@ -147,6 +155,8 @@ def build_chloropleth_layer_for_cities(topo_cities, decp_stats, data_column, leg
         decp_stats,
         topojson_key="objects.poly",
         legend=legend,
+        tooltip_fields=["ID"],
+        tooltip_aliases=["Code commune"],
     )
 
 
@@ -158,6 +168,8 @@ def build_chloropleth_layer_for_departments(topo_departements, decp_stats, data_
         data_column,
         decp_stats,
         legend=legend,
+        tooltip_fields=["nom", "code"],
+        tooltip_aliases=["Département", "Code"],
     )
 
 
@@ -169,6 +181,8 @@ def build_chloropleth_layer_for_regions(topo_regions, decp_stats, data_column, l
         data_column,
         decp_stats,
         legend=legend,
+        tooltip_fields=["nom", "code"],
+        tooltip_aliases=["Région", "Code"],
     )
 
 
@@ -349,7 +363,7 @@ def run():
     col1.markdown(markdown_col1)
     col2.markdown(f"**{selected_scale} avec le plus d'acheteurs publics représentés:**")
     zones_most_sirens = stats.sort_values(by="pourcentage_sirens_couverts", ascending=False).head(5)
-    markdown_col2 = f"| Code {selected_scale.lower()} | Acheteurs publics représentés | \n | ------------- |:-------------:|"
+    markdown_col2 = f"| Code | Acheteurs publics représentés | \n | ------------- |:-------------:|"
     for zone, _, covered_percentage in zones_most_sirens.values.tolist():
         markdown_col2 += f"\n | {zone} | {covered_percentage}% |"
     col2.markdown(markdown_col2)
