@@ -1,6 +1,3 @@
-import base64
-import weakref
-
 import streamlit as st
 from streamlit_folium import folium_static
 import folium
@@ -342,17 +339,6 @@ def run():
     added_layer = chloropleth_layer.add_to(folium_map)
     # folium_map.fit_bounds(added_layer.get_bounds())
     folium_static(folium_map)
-
-    # col1, col2 = st.columns(2)
-    # if col1.button("Générer un lien de téléchargement de la carte"):
-    #     file_name = f"carteCouvertureDECP-{selected_year}-{selected_scale}.html"
-    #     path = f"./data/{file_name}"
-    #     folium_map.save(path)
-    #     with open(path, "rb") as f:
-    #         bytes = f.read()
-    #         b64 = base64.b64encode(bytes).decode()
-    #         href = f"<a href=\"data:file/html;base64,{b64}\" download='{file_name}'> {file_name} </a>"
-    #     col2.markdown(f"{href}", unsafe_allow_html=True)
 
     col1, col2 = st.columns([2,3])
     col1.markdown(f"**{selected_scale} avec le plus de marchés:**")
