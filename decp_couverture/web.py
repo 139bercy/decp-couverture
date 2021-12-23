@@ -43,8 +43,8 @@ def cached__get_coverage(coverage_artifact_url: str):
             "code_commune_acheteur": str,
             "annee_marche": int,
             "nombre_marches": int,
-            "nombre_sirens_decp": int,
-            "nombre_sirens_insee": int,
+            "nombre_sirens_decp": "Int64",
+            "nombre_sirens_insee": "Int64",
         },
     )
     return coverage
