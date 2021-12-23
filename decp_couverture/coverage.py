@@ -45,7 +45,7 @@ def run(rows: int = None):
     decp = filter_public_sirens(decp, "siren_acheteur")
     num_marches_siren_publiques = len(decp)
     print(
-        f"Nombre de marchés réduit de {num_marches_tous_siren} à {num_marches_siren_publiques} en conservant les SIREN publiques (1* ou 2*)"
+        f"Nombre de marchés réduit de {num_marches_siren_valide} à {num_marches_siren_publiques} en conservant les SIREN publiques (1* ou 2*)"
     )
 
     coverage_stats = decp.groupby(
@@ -89,4 +89,5 @@ def run(rows: int = None):
         sirens_stats, how="left", left_on="code_commune_acheteur", right_index=True
     )
     path = conf.coverage.chemin
+    print(coverage_stats.dtypes)
     load.save_data_to_csv_file(coverage_stats, path, index=False, float_format="%.2f")
