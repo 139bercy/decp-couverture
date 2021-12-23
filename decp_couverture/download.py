@@ -65,6 +65,11 @@ def save_json(data: dict, path: str):
 
 
 def download_decp(rows: int = None):
+    """Télécharge les DECP sur le disque.
+
+    Args:
+        rows (int, optional): Nombre de lignes à télécharger. Defaults to None.
+    """
     path = conf.download.decp.chemin
     url = conf.download.decp.url
     if rows is not None:
@@ -83,13 +88,17 @@ def get_sirene_auth_header():
     return headers
 
 
-def download_sirens(rows: int = None):
+def download_sirens():
+    """Télécharge la base Sirene sur le disque.
+    """
     url = conf.download.sirens.url
     path = conf.download.sirens.chemin
     download_data_from_url_to_file(url, path, stream=True)
 
 
 def download_contours():
+    """Télécharge les contours de cartes sur le disque.
+    """
     path = conf.download.contours.communes.chemin
     url = conf.download.contours.communes.url
     download_data_from_url_to_file(url, path, stream=True)
