@@ -15,6 +15,19 @@ def load_data_from_csv_file(
     index_col: str = None,
     dtype: dict = None,
 ):
+    """Charge de la donnée depuis un fichier du disque.
+
+    Args:
+        path (str): Chemin du fichier
+        sep (str, optional): Séparateur. Defaults to ";".
+        rows (int, optional): Nombre de lignes à charger. Defaults to None.
+        columns (list, optional): Colonnes à charger. Defaults to None.
+        index_col (str, optional): Numéro de la colonne d'index. Defaults to None.
+        dtype (dict, optional): Types des colonnes. Defaults to None.
+
+    Returns:
+        pandas.DataFrame: Données chargées
+    """
     return pandas.read_csv(
         path,
         sep=sep,
